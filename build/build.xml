@@ -1,0 +1,50 @@
+<project name="distro.build" default="build" basedir="./" xmlns:antcontrib="antlib:net.sf.antcontrib">
+
+	<loadproperties srcfile="build.properties"/>
+	<import file="${cfdistro.build.file}"/>
+
+	<target name="build" depends="cfdistro.build, src.to.mappings.xml, set.mappings">
+		<loadproperties srcfile="${src.dir}/mxunit/buildprops/nightlyversion.properties"/>
+		<zip destfile="${dist.dir}/mxunit.zip" basedir="${src.dir}" includes="mxunit/framework/** mxunit/runner/**" />
+		<zip destfile="${dist.dir}/mxunit-all.zip" basedir="${src.dir}/" includes="mxunit/**" />
+	   	<property name="mxunit.version" value="${build.major}.${build.minor}.${build.buildnum}" />
+	</target>
+
+	<target name="build.mvn.release" depends="project.update, build.mxunit.tests.run">
+		<!-- 
+	   	<property name="release.repo.user" value="admin" />
+	   	<property name="release.repo.password" value="admin123" />
+	   	<property name="release.repo.url" value="admin123" />
+	    <mvn-repo id="release.repo" url="http://127.0.0.1:8081/nexus/content/repositories/releases">
+	    	<authentication>
+	    		<authentication username="${release.repo.user}" password="${release.repo.password}"/>
+    		</authentication>
+	    </mvn-repo>
+
+		<property name="target.repo.id" value="release.repo" />
+		<property name="target.repo.id" value="loganberry.repo" />
+		 -->
+		<property name="target.repo.id" value="cfdistro.repo.local" />
+
+		<mvn-put artifact="${dist.dir}/mxunit.zip" packaging="zip" repoId="${target.repo.id}"
+		 groupId="org.mxunit" artifactId="core" version="${mxunit.version}"/>
+
+		<mvn-put artifact="${dist.dir}/mxunit-all.zip" packaging="zip" repoId="${target.repo.id}"
+		 groupId="org.mxunit" artifactId="mxunit" version="${mxunit.version}" />
+		
+		<!--  create an extension -->
+	    <delete dir="${basedir}/extensionbase/" />
+	    <mkdir dir="${basedir}/extensionbase/" />
+		<copy todir="${basedir}/extensionbase/applications/mxunit">
+			<fileset dir="${src.dir}/mxunit" />
+		</copy>
+		<property name="extension.label" value="MXUnit ${mxunit.version}" />
+		<antcontrib:runtarget target="extension.build" />
+
+		<!-- add the extension as well -->
+		<mvn-put artifact="${extension.dist}/${extension.archive}" packaging="zip" repoId="${target.repo.id}"
+		 groupId="cfml.extension" artifactId="mxunit" version="${extension.version}" />
+
+	</target>	
+	
+</project>

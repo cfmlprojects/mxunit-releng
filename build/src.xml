@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<src>
+	<project>
+		<src dest="@src.dir@/mxunit/" type="git" 
+			uri="https://github.com/mxunit/mxunit.git"
+			branch="origin/develop" 
+			user="" password="" />
+	</project>
+	<sources>
+	</sources>
+</src>
