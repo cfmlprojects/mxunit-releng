@@ -4,10 +4,11 @@
 	<import file="${cfdistro.build.file}"/>
 
 	<target name="build" depends="cfdistro.build, src.to.mappings.xml, set.mappings">
-		<loadproperties srcfile="${src.dir}/mxunit/buildprops/nightlyversion.properties"/>
+		<loadproperties prefix="mxb" srcfile="${src.dir}/mxunit/buildprops/version.properties"/>
+	   	<antcontrib:var name="mxunit.version" value="${mxb.build.major}.${mxb.build.minor}.${mxb.build.buildnum}" />
+	   	<echo message="mxunit version: ${mxunit.version}" />
 		<zip destfile="${dist.dir}/mxunit.zip" basedir="${src.dir}" includes="mxunit/framework/** mxunit/runner/**" />
 		<zip destfile="${dist.dir}/mxunit-all.zip" basedir="${src.dir}/" includes="mxunit/**" />
-	   	<property name="mxunit.version" value="${build.major}.${build.minor}.${build.buildnum}" />
 	</target>
 
 	<target name="build.mvn.release" depends="project.update, build.mxunit.tests.run">
@@ -44,6 +45,8 @@
 		<!-- add the extension as well -->
 		<mvn-put artifact="${extension.dist}/${extension.archive}" packaging="zip" repoId="${target.repo.id}"
 		 groupId="cfml.extension" artifactId="mxunit" version="${extension.version}" />
+
+	    <delete dir="${basedir}/extensionbase/" />
 
 	</target>	
 	
