@@ -1,0 +1,27 @@
+[antlib:org.apache.ant.antunit] Could not load definitions from resource org/apache/ant/antunit/antlib.xml. It could not be found.
+[au:antunit] Build File: /workspace/mxunit-releng/src/mxunit-ant/tests/assertFailuresTest.xml
+[au:antunit] Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 1.782 sec
+[au:antunit] Target: testCatchFailure took 1.782 sec
+[au:antunit] Build File: /workspace/mxunit-releng/src/mxunit-ant/tests/commitSvnTest.xml
+[au:antunit] Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0.174 sec
+[au:antunit] Target: testCommit took 0.174 sec
+[au:antunit] Build File: /workspace/mxunit-releng/src/mxunit-ant/tests/dirTest.xml
+[au:antunit] Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0.52 sec
+[au:antunit] Target: testLog took 0.282 sec
+[au:antunit] Target: testDir took 0.235 sec
+[au:antunit] Build File: /workspace/mxunit-releng/src/mxunit-ant/tests/propTest.xml
+[au:antunit] Tests run: 6, Failures: 0, Errors: 0, Time elapsed: 0.726 sec
+[au:antunit] Target: testThatErrorPropGetsSet took 0.225 sec
+[au:antunit] Target: testThatErrorPropertySetsFailurePropertyToo took 0.128 sec
+[au:antunit] Target: testThatPropDoesNotExistAfterSuccess took 0.148 sec
+[au:antunit] Target: testThatSomePropsExist took 0.003 sec
+[au:antunit] Target: testThatTaskIsNotBrokenWhenFailureOccursAndPropsAreNOTSet took 0.15 sec
+[au:antunit] Target: testThatFailurePropGetsSet took 0.06 sec
+[au:antunit] Build File: /workspace/mxunit-releng/src/mxunit-ant/tests/svnUpdateTest.xml
+[au:antunit] Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 2.334 sec
+[au:antunit] Target: testNotUpdated took 2.334 sec
+[au:antunit] Build File: /workspace/mxunit-releng/src/mxunit-ant/tests/testCaseTest.xml
+[au:antunit] Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0.206 sec
+[au:antunit] Target: testTotalFailures took 0.101 sec
+[au:antunit] Target: testTotalRuns took 0.101 sec
+main:  duration 5 seconds

@@ -3,15 +3,29 @@
 	<loadproperties srcfile="build.properties"/>
 	<import file="${cfdistro.build.file}"/>
 
+	<target name="mxunit-ant.getversion">
+		<loadfile srcFile="${src.dir}/mxunit-ant/org/mxunit/ant/MXUnitAntTask.java" property="mxunit-ant.version"/>
+		<antcontrib:propertyregex override="yes" property="mxunit-ant.version" input="${mxunit-ant.version}" 
+			regexp=".*?version\s?=\s?&quot;([^&quot;]+).*?" select="\1" />
+		<echo message="mxunit-ant version: ${mxunit-ant.version}" />
+	</target>
+
 	<target name="build" depends="cfdistro.build, src.to.mappings.xml, set.mappings">
 		<loadproperties prefix="mxb" srcfile="${src.dir}/mxunit/buildprops/version.properties"/>
 	   	<antcontrib:var name="mxunit.version" value="${mxb.build.major}.${mxb.build.minor}.${mxb.build.buildnum}" />
 	   	<echo message="mxunit version: ${mxunit.version}" />
 		<zip destfile="${dist.dir}/mxunit.zip" basedir="${src.dir}" includes="mxunit/framework/** mxunit/runner/**" />
 		<zip destfile="${dist.dir}/mxunit-all.zip" basedir="${src.dir}/" includes="mxunit/**" />
+		<antcontrib:var name="runwar.port" value="0" />
+		<antcontrib:var name="runwar.stop.socket" value="0" />
+		<server-run>
+			<ant inheritAll="false" antfile="build.xml" dir="${src.dir}/mxunit-ant/">
+			  <property name="server.port.http" value="${server.port.http}"/>
+			</ant>
+		</server-run>
 	</target>
 
-	<target name="build.mvn.release" depends="project.update, build.mxunit.tests.run">
+	<target name="build.mvn.release" depends="project.update, build.mxunit.tests.run, mxunit-ant.getversion">
 		<!-- 
 	   	<property name="release.repo.user" value="admin" />
 	   	<property name="release.repo.password" value="admin123" />
@@ -47,6 +61,9 @@
 		 groupId="cfml.extension" artifactId="mxunit" version="${extension.version}" />
 
 	    <delete dir="${basedir}/extensionbase/" />
+
+		<mvn-put artifact="${src.dir}/mxunit-ant/dist/mxunit-ant.jar" packaging="jar" repoId="${target.repo.id}"
+		 groupId="org.mxunit" artifactId="mxunit-ant" version="${mxunit-ant.version}"/>
 
 	</target>	
 	

@@ -3,8 +3,31 @@
 	<project>
 		<src dest="@src.dir@/mxunit/" type="git" 
 			uri="https://github.com/mxunit/mxunit.git"
-			branch="origin/develop" 
+			branch="master" remote="origin" 
 			user="" password="" />
+		<!-- 
+		<src dest="@src.dir@/mxunit-ant/" type="git" 
+			uri="git://github.com/mxunit/mxunit-ant.git"
+			branch="master" remote="origin" 
+			user="" password="" />
+		-->
+		<src dest="@src.dir@/mxunit-ant/" type="git" 
+			uri="git://github.com/cfmlprojects/mxunit-ant.git"
+			branch="master" remote="origin"
+			user="" password="" />
+		<src dest="@src.dir@/org.mxunit.eclipseplugin/" type="git" 
+			uri="git://github.com/mxunit/org.mxunit.eclipseplugin.git"
+			branch="master" remote="origin"
+			user="" password="" />
+		<src dest="@src.dir@/org.mxunit.eclipseplugin.feature/" type="git" 
+			uri="git://github.com/mxunit/org.mxunit.eclipseplugin.feature.git"
+			branch="master" remote="origin"
+			user="" password="" />
+		<src dest="@src.dir@/org.mxunit.eclipseplugin.site/" type="git" 
+			uri="git://github.com/mxunit/org.mxunit.eclipseplugin.site.git"
+			branch="master" remote="origin"
+			user="" password="" />
+
 	</project>
 	<sources>
 	</sources>

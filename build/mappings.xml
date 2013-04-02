@@ -2,5 +2,9 @@
 
 <mappings>
   <mapping physical="@src.dir@/mxunit" virtual="/mxunit"></mapping>
+  <mapping physical="@src.dir@/mxunit-ant" virtual="/mxunit-ant"></mapping>
+  <mapping physical="@src.dir@/org.mxunit.eclipseplugin" virtual="/org.mxunit.eclipseplugin"></mapping>
+  <mapping physical="@src.dir@/org.mxunit.eclipseplugin.feature" virtual="/org.mxunit.eclipseplugin.feature"></mapping>
+  <mapping physical="@src.dir@/org.mxunit.eclipseplugin.site" virtual="/org.mxunit.eclipseplugin.site"></mapping>
 </mappings>
 
