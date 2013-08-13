@@ -14,8 +14,8 @@
 		<loadproperties prefix="mxb" srcfile="${src.dir}/mxunit/buildprops/version.properties"/>
 	   	<antcontrib:var name="mxunit.version" value="${mxb.build.major}.${mxb.build.minor}.${mxb.build.buildnum}" />
 	   	<echo message="mxunit version: ${mxunit.version}" />
-		<zip destfile="${dist.dir}/mxunit.zip" basedir="${src.dir}" includes="mxunit/framework/** mxunit/runner/**" />
-		<zip destfile="${dist.dir}/mxunit-all.zip" basedir="${src.dir}/" includes="mxunit/**" />
+		<zip destfile="${dist.dir}/mxunit.zip" basedir="${src.dir}/mxunit" includes="framework/** runner/**" />
+		<zip destfile="${dist.dir}/mxunit-all.zip" basedir="${src.dir}/mxunit" includes="**" />
 		<antcontrib:var name="runwar.port" value="0" />
 		<antcontrib:var name="runwar.stop.socket" value="0" />
 		<server-run>
