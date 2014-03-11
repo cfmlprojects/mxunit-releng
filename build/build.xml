@@ -10,6 +10,67 @@
 		<echo message="mxunit-ant version: ${mxunit-ant.version}" />
 	</target>
 
+	<property name="site.suffix" value=""/>
+	<property name="merge.site" value="true"/>
+	<property name="plugin.p2.dir" value="${dist.dir}/update${site.suffix}"/>
+	<property name="plugin.p2.release.dir" value="http://mxunit.org:80/update${site.suffix}"/>
+	<property name="remote.cfeclipse.sites.dir" value="from.cfeclipse.properties"/>
+	<property name="remote.p2.dir" value="${remote.sites.dir}/mxunit-update${site.suffix}"/>
+	<property name="branchTagPath" value="master"/>
+	
+	<target name="clean.all">
+		<delete dir="${dist.dir}"/>
+		<delete dir="${basedir}/workspace"/>
+		<delete dir="${basedir}/target-platform"/>
+	</target>
+
+	<target name="build.eclipse">
+		<abspath property="src.dir" path="${src.dir}" />
+		<abspath property="dist.dir" path="${dist.dir}" />
+		<abspath property="product.zip.dir" path="${dist.dir}/product" />
+		<mkdir dir="${dist.dir}"/>
+		<property name="script.dir" location="${src.dir}/org.mxunit.eclipseplugin.releng"/>
+		<echo message="branchTagPath : ${branchTagPath}"/>
+		<replaceregexp file="${script.dir}/build.cquery" byline="true"
+			match="branchTagPath.?=.?&quot;.*?&quot;" replace="branchTagPath=&quot;${branchTagPath}&quot;"
+		/>
+		<bucky.headless script="${script.dir}/promote.bmscript">
+			<sysproperty key="branchTagPath" value="${branchTagPath}" />
+			<sysproperty key="script.dir" value="${script.dir}" />
+			<sysproperty key="src.dir" value="${src.dir}" />
+			<sysproperty key="dist.dir" value="${dist.dir}" />
+			<sysproperty key="product.zip.dir" value="${product.zip.dir}" />
+			<sysproperty key="plugin.p2.dir" value="${plugin.p2.dir}" />
+		</bucky.headless>
+		<bucky.headless script="${src.dir}/org.mxunit.eclipseplugin.releng/merge.bmscript">
+			<sysproperty key="plugin.p2.source" value="${plugin.p2.release.dir}" />
+			<sysproperty key="plugin.p2.dest" value="${plugin.p2.dir}" />
+		</bucky.headless>
+	</target>	
+
+	<target name="merge.site">
+		<abspath property="src.dir" path="${src.dir}" />
+		<abspath property="dist.dir" path="${dist.dir}" />
+		<bucky.headless script="${src.dir}/org.mxunit.eclipseplugin.releng/merge.bmscript">
+			<sysproperty key="plugin.p2.source" value="${plugin.p2.release.dir}" />
+			<sysproperty key="plugin.p2.dest" value="${plugin.p2.dir}" />
+		</bucky.headless>
+	</target>	
+
+	<target name="build.eclipse.and.scp" depends="build.eclipse">
+		<antcontrib:var name="remote" value="cfeclipse"/>
+		<cfdistro.setremote />
+		<loadproperties srcfile="${src.dir}/org.mxunit.eclipseplugin.releng/build.properties"/>
+		<echo message="scp update site"/>
+		<deploy-scp toDir="${remote.user}@${remote.host}:${remote.p2.dir}" fromdir="${plugin.p2.dir}">
+			<scpfiles>
+				<fileset dir="${plugin.p2.dir}">
+					<include name="**/*"/>
+				</fileset>
+			</scpfiles>
+		</deploy-scp>
+	</target>	
+	
 	<target name="build" depends="cfdistro.build, src.to.mappings.xml, set.mappings">
 		<loadproperties prefix="mxb" srcfile="${src.dir}/mxunit/buildprops/version.properties"/>
 	   	<antcontrib:var name="mxunit.version" value="${mxb.build.major}.${mxb.build.minor}.${mxb.build.buildnum}" />
@@ -19,9 +80,27 @@
 		<antcontrib:var name="runwar.port" value="0" />
 		<antcontrib:var name="runwar.stop.socket" value="0" />
 		<server-run>
-			<ant inheritAll="false" antfile="build.xml" dir="${src.dir}/mxunit-ant/">
-			  <property name="server.port.http" value="${server.port.http}"/>
-			</ant>
+			<java
+			        classname="org.apache.tools.ant.launch.Launcher"
+			        fork="true"
+			        failonerror="true"
+			        dir="${src.dir}/mxunit-ant/"
+			        timeout="4000000"
+			        taskname="startAnt"
+			>
+			    <classpath>
+			        <pathelement location="${ant.home}/lib/ant-launcher.jar"/>
+					<fileset dir="${cfdistro.lib.dir}">
+						<include name="**/*.jar" />
+					</fileset>
+			    </classpath>
+			    <arg value="-buildfile"/>
+			    <arg file="${src.dir}/mxunit-ant/build.xml"/>
+			    <arg value="-Dserver.port.http=${server.port.http}"/>
+			    <arg value="-Dbasedir=${src.dir}/mxunit-ant/"/>
+			    <arg value="-Dbuild.compiler=org.eclipse.jdt.core.JDTCompilerAdapter"/>
+			    <arg value="runTests"/>
+			</java>
 		</server-run>
 	</target>
 

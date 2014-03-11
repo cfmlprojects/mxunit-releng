@@ -1,2 +1,6 @@
 /dist
 /src
+/build/build.log
+/build/mxunit-test.log
+/build/target-platform/
+/build/workspace/
