@@ -27,6 +27,14 @@
 			uri="git://github.com/mxunit/org.mxunit.eclipseplugin.site.git"
 			branch="master" remote="origin"
 			user="" password="" />
+		<src dest="@src.dir@/org.mxunit.eclipseplugin.update/" type="git" 
+			uri="git://github.com/cfeclipse/org.mxunit.eclipseplugin.update.git"
+			branch="master" remote="origin"
+			user="" password="" />
+		<src dest="@src.dir@/org.mxunit.eclipseplugin.releng/" type="git" 
+			uri="git://github.com/cfeclipse/org.mxunit.eclipseplugin.releng.git"
+			branch="master" remote="origin"
+			user="" password="" />
 
 	</project>
 	<sources>
