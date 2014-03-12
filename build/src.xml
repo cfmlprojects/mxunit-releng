@@ -15,8 +15,14 @@
 			uri="git://github.com/cfmlprojects/mxunit-ant.git"
 			branch="master" remote="origin"
 			user="" password="" />
+		<!--
 		<src dest="@src.dir@/org.mxunit.eclipseplugin/" type="git" 
 			uri="git://github.com/mxunit/org.mxunit.eclipseplugin.git"
+			branch="master" remote="origin"
+			user="" password="" />
+		-->
+		<src dest="@src.dir@/org.mxunit.eclipseplugin/" type="git" 
+			uri="git://github.com/cfeclipse/org.mxunit.eclipseplugin.git"
 			branch="master" remote="origin"
 			user="" password="" />
 		<src dest="@src.dir@/org.mxunit.eclipseplugin.feature/" type="git" 
