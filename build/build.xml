@@ -3,6 +3,16 @@
 	<loadproperties srcfile="build.properties"/>
 	<import file="${cfdistro.build.file}"/>
 
+	<property name="deploy.quiet" value="true"/>
+	<property name="site.suffix" value="-dev"/>
+	<property name="generator.suffix" value="I"/>
+	<property name="merge.updates" value="false"/>
+	<property name="plugin.p2.dir" value="${dist.dir}/update${site.suffix}"/>
+	<property name="plugin.p2.release.dir" value="http://mxunit.org/update${site.suffix}"/>
+	<property name="remote.cfeclipse.sites.dir" value="from.cfeclipse.properties"/>
+	<property name="remote.p2.dir" value="${remote.sites.dir}/update${site.suffix}"/>
+	<property name="sign" value="false"/>
+	
 	<target name="mxunit-ant.getversion">
 		<loadfile srcFile="${src.dir}/mxunit-ant/org/mxunit/ant/MXUnitAntTask.java" property="mxunit-ant.version"/>
 		<antcontrib:propertyregex override="yes" property="mxunit-ant.version" input="${mxunit-ant.version}" 
@@ -25,6 +35,20 @@
 		</server-run>
 	</target>
 
+	<target name="build.eclipse">
+		<abspath property="src.dir" path="${src.dir}" />
+		<abspath property="dist.dir" path="${dist.dir}" />
+		<delete dir="${plugin.p2.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+ 		<maven-run basedir="${src.dir}/../"
+             options="-Dplugin.p2.dir=${plugin.p2.dir} -Dbuild.type=${build.type} -Dsite.suffix=${site.suffix} -Dsign=${sign} -Dmerge.updates=${merge.updates}"
+             goal="clean verify"
+             resultproperty="maven.build.result"/>
+         <echo message="${maven.build.result}" />
+         <antcontrib:runtarget target="p2.html" />
+	</target>
+	
+	
 	<target name="build.mvn.release" depends="project.update, build.mxunit.tests.run, mxunit-ant.getversion">
 		<!-- 
 	   	<property name="release.repo.user" value="admin" />
