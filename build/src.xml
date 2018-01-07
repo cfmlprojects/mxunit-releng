@@ -5,6 +5,7 @@
 			uri="https://github.com/mxunit/mxunit.git"
 			branch="master" remote="origin" 
 			user="" password="" />
+
 		<src dest="@src.dir@/mxunit-ant/" type="git" 
 			uri="https://github.com/mxunit/mxunit-ant.git"
 			branch="master" remote="origin" 

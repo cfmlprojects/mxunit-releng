@@ -1,3 +1,10 @@
 /dist
 /src
+<<<<<<< HEAD
 /target
+=======
+/build/build.log
+/build/mxunit-test.log
+/build/target-platform/
+/build/workspace/
+>>>>>>> 494c5a8fb30d7c5ba09a60b37886dd4a30dfa465
