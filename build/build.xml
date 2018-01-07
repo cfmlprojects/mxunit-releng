@@ -7,10 +7,9 @@
 	<property name="site.suffix" value="-dev"/>
 	<property name="generator.suffix" value="I"/>
 	<property name="merge.updates" value="false"/>
-	<property name="plugin.p2.dir" value="${dist.dir}/update${site.suffix}"/>
-	<property name="plugin.p2.release.dir" value="http://mxunit.org/update${site.suffix}"/>
-	<property name="remote.cfeclipse.sites.dir" value="from.cfeclipse.properties"/>
-	<property name="remote.p2.dir" value="${remote.sites.dir}/update${site.suffix}"/>
+    <property name="remote.cfeclipse.sites.dir" value="from.cfeclipse.properties"/>
+    <property name="remote.p2.dir" value="${remote.sites.dir}/mxunit/update${site.suffix}"/>
+	<property name="plugin.p2.dir" location="${dist.dir}/update${site.suffix}"/>
 	<property name="sign" value="false"/>
 	
 	<target name="mxunit-ant.getversion">
@@ -40,6 +39,7 @@
 		<abspath property="dist.dir" path="${dist.dir}" />
 		<delete dir="${plugin.p2.dir}"/>
 		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${plugin.p2.dir}"/>
  		<maven-run basedir="${src.dir}/../"
              options="-Dplugin.p2.dir=${plugin.p2.dir} -Dbuild.type=${build.type} -Dsite.suffix=${site.suffix} -Dsign=${sign} -Dmerge.updates=${merge.updates}"
              goal="clean verify"
@@ -47,8 +47,41 @@
          <echo message="${maven.build.result}" />
          <antcontrib:runtarget target="p2.html" />
 	</target>
+	<target name="p2.html">
+		<echo file="${temp.dir}/p2files.txt"><![CDATA[<table cellspacing="0" cellpadding="0"><tr><td colspan="2" style="border-top:0px; padding-top:3px;padding-left:8px;"><em>Files</em></td></tr>]]>
+		</echo>
+		<antcontrib:for param="file">
+			<path><fileset dir="${plugin.p2.dir}" includes="**/*.jar"/></path>
+			<sequential>
+				<antcontrib:propertyregex override="yes" property="p2file" input="@{file}" regexp=".*?${plugin.p2.dir}\/?(.+)" replace="\1"/>
+ 				<echo file="${temp.dir}/p2files.txt" append="true"><![CDATA[<tr><td valign="top" style="padding:5px"><a href="${p2file}">${p2file}</a></td><td valign="top" style="padding:5px"></td></tr>]]>
+				</echo>
+			</sequential>
+	  	</antcontrib:for>
+		<echo file="${temp.dir}/p2files.txt" append="true"><![CDATA[</table>]]></echo>
+		<loadfile srcfile="${temp.dir}/p2files.txt" property="p2files.table" />
+		<copy file="${src.dir}/org.mxunit.eclipseplugin.update${site.suffix}/index.html" todir="${plugin.p2.dir}">
+		    <filterchain><expandproperties /></filterchain>
+		</copy>
+		<replaceregexp file="${plugin.p2.dir}/index.html"
+		match='(?s)&lt;div id="data"&gt;.*?&lt;\/div&gt;'
+		replace='&lt;div id="data"&gt;${line.separator}${p2files.table}${line.separator}&lt;\/div&gt;' byline="false" />
+		<delete dir="${temp.dir}" />		
+	</target>
 	
-	
+    <target name="build.and.scp" depends="build.eclipse">
+        <antcontrib:var name="remote" value="cfeclipse"/>
+        <cfdistro.setremote />
+        <echo message="scp update site"/>
+        <deploy-scp toDir="${remote.user}@${remote.host}:${remote.p2.dir}" fromdir="${plugin.p2.dir}">
+            <scpfiles>
+                <fileset dir="${plugin.p2.dir}">
+                    <include name="**/*"/>
+                </fileset>
+            </scpfiles>
+        </deploy-scp>
+    </target>
+    
 	<target name="build.mvn.release" depends="project.update, build.mxunit.tests.run, mxunit-ant.getversion">
 		<!-- 
 	   	<property name="release.repo.user" value="admin" />
