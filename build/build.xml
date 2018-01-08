@@ -36,7 +36,6 @@
 	<target name="build.eclipse.and.scp" depends="build.eclipse">
 		<antcontrib:var name="remote" value="cfeclipse"/>
 		<cfdistro.setremote />
-		<loadproperties srcfile="${src.dir}/org.mxunit.eclipseplugin.releng/build.properties"/>
 		<echo message="scp update site"/>
 		<deploy-scp toDir="${remote.user}@${remote.host}:${remote.p2.dir}" fromdir="${plugin.p2.dir}">
 			<scpfiles>
