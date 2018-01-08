@@ -33,39 +33,6 @@
 		<delete dir="${basedir}/target-platform"/>
 	</target>
 
-	<target name="build.eclipse">
-		<abspath property="src.dir" path="${src.dir}" />
-		<abspath property="dist.dir" path="${dist.dir}" />
-		<abspath property="product.zip.dir" path="${dist.dir}/product" />
-		<mkdir dir="${dist.dir}"/>
-		<property name="script.dir" location="${src.dir}/org.mxunit.eclipseplugin.releng"/>
-		<echo message="branchTagPath : ${branchTagPath}"/>
-		<replaceregexp file="${script.dir}/build.cquery" byline="true"
-			match="branchTagPath.?=.?&quot;.*?&quot;" replace="branchTagPath=&quot;${branchTagPath}&quot;"
-		/>
-		<bucky.headless script="${script.dir}/promote.bmscript">
-			<sysproperty key="branchTagPath" value="${branchTagPath}" />
-			<sysproperty key="script.dir" value="${script.dir}" />
-			<sysproperty key="src.dir" value="${src.dir}" />
-			<sysproperty key="dist.dir" value="${dist.dir}" />
-			<sysproperty key="product.zip.dir" value="${product.zip.dir}" />
-			<sysproperty key="plugin.p2.dir" value="${plugin.p2.dir}" />
-		</bucky.headless>
-		<bucky.headless script="${src.dir}/org.mxunit.eclipseplugin.releng/merge.bmscript">
-			<sysproperty key="plugin.p2.source" value="${plugin.p2.release.dir}" />
-			<sysproperty key="plugin.p2.dest" value="${plugin.p2.dir}" />
-		</bucky.headless>
-	</target>	
-
-	<target name="merge.site">
-		<abspath property="src.dir" path="${src.dir}" />
-		<abspath property="dist.dir" path="${dist.dir}" />
-		<bucky.headless script="${src.dir}/org.mxunit.eclipseplugin.releng/merge.bmscript">
-			<sysproperty key="plugin.p2.source" value="${plugin.p2.release.dir}" />
-			<sysproperty key="plugin.p2.dest" value="${plugin.p2.dir}" />
-		</bucky.headless>
-	</target>	
-
 	<target name="build.eclipse.and.scp" depends="build.eclipse">
 		<antcontrib:var name="remote" value="cfeclipse"/>
 		<cfdistro.setremote />
@@ -126,6 +93,7 @@
          <echo message="${maven.build.result}" />
          <antcontrib:runtarget target="p2.html" />
 	</target>
+
 	<target name="p2.html">
 		<echo file="${temp.dir}/p2files.txt"><![CDATA[<table cellspacing="0" cellpadding="0"><tr><td colspan="2" style="border-top:0px; padding-top:3px;padding-left:8px;"><em>Files</em></td></tr>]]>
 		</echo>
